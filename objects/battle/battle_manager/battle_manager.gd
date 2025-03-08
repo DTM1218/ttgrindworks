@@ -38,7 +38,7 @@ var has_moved : Array[Node3D] = []
 
 ## Signals
 signal s_focus_char(character: Node3D)
-signal s_battle_ended
+signal s_battle_ended(round: int)
 signal s_battle_ending
 signal s_round_started(actions: Array[BattleAction])
 signal s_round_ended
@@ -106,11 +106,12 @@ func begin_turn():
 	for partner in Util.get_player().partners:
 		inject_battle_action(partner.get_attack(), 0)
 	# Get actions from every Cog
-	for cog in cogs:
-		for i in cog.stats.turns:
-			var attack := get_cog_attack(cog)
-			if not attack == null:
-				append_action(attack)
+	if not battle_node.disable_cog_attacks:
+		for cog in cogs:
+			for i in cog.stats.turns:
+				var attack := get_cog_attack(cog)
+				if not attack == null:
+					append_action(attack)
 	s_round_started.emit(round_actions)
 	await run_actions()
 	round_over()
@@ -246,6 +247,7 @@ func end_battle() -> void:
 			battle_node.get_parent().add_child(chest)
 			chest.global_position = battle_node.global_position
 			chest.global_rotation = battle_node.global_rotation
+			# Samba Hat
 			if player.better_battle_rewards == true and current_round <= 2:
 				chest.item_pool = load(ITEM_POOL_PROGRESSIVES)
 				player.boost_queue.queue_text("Bounty!", Color.GREEN)

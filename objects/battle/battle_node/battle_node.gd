@@ -21,6 +21,7 @@ var state := BattleState.INACTIVE
 @export var override_intro: BattleStartMovie
 @export var item_pool: ItemPool
 @export var boss_battle := false
+@export var disable_cog_attacks := false
 
 # Child References
 @onready var battle_cam := $BirdsEye/BattleCamera
