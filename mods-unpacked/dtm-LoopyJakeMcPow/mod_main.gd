@@ -15,14 +15,18 @@ func _init() -> void:
 
 func install_script_extensions() -> void:
 	extensions_dir_path = mod_dir_path.path_join("extensions")
-	# ModLoaderMod.install_script_extension(extensions_dir_path.path_join("objects/player/character.gd"))
 
 func install_script_hook_files() -> void:
 	extensions_dir_path = mod_dir_path.path_join("extensions")
-	ModLoaderMod.install_script_hooks("res://objects/player/character.gd", extensions_dir_path.path_join("objects/player/character.hooks.gd"))
 
 func _ready() -> void:
 	ModLoaderLog.info("Ready!", MOD_LOG_NAME)
 	# NOTE: preloading causes issues, call normal load here
-	CustomToonRegistry.CUSTOM_TOONS.append(load("res://mods-unpacked/dtm-LoopyJakeMcPow/loopy_jake_mcpow.tres"))
-	print("Appended Loopy Jake McPow")
+	var character : PlayerCharacter = load("res://mods-unpacked/dtm-LoopyJakeMcPow/loopy_jake_mcpow.tres")
+	CustomToonRegistry.CUSTOM_TOONS.append(character)
+	CustomToonRegistry.CUSTOM_TOON_SETUPS[character.character_name] = Callable(self, "loopyjakemcpow")
+	print("Added Loopy Jake McPow to CustomToonRegistry")
+	
+func loopyjakemcpow(player: Player):
+	player.stats.gags_unlocked['Drop'] = 1
+	player.stats.gags_unlocked['Squirt'] = 1
