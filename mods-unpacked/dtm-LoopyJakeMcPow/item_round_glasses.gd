@@ -1,6 +1,5 @@
 extends ItemScript
 
-var _manager : BattleManager = null
 
 func on_collect(_item: Item, _model: Node3D) -> void:
 	setup()
